@@ -1,21 +1,20 @@
 # AI security ideas (private backlog)
 
-This repo is a weekday log of implementation candidates: papers, protocol notes, and tools worth building later.
-
-It is **not** the implementation repo. When I pick one, that work goes into its own private repo.
+Private weekday log of papers, protocol notes, and tools. I pick from here later. Each pick becomes its own private implementation repo.
 
 ## How this works
 
-- Weekdays around 8:25am ET, Gitcoder adds a dated file under `ideas/` with three candidates.
-- Each note is a bit more than a title: what the paper/tech/tool actually is, how it works, and why it would matter in a real product.
-- Status lives in `INDEX.md`: `queued` until I ask to implement, then `building` / `shipped` with a link to that private repo.
-- Duplicates should not be re-logged. If a day has nothing new, skip the file.
+- One markdown page per month: `ideas/YYYY-MM.md`
+- Every weekday around 8:25am ET, Gitcoder appends three new candidates to that month's page
+- Each entry says what the paper/tech/tool is, how it works, and why it would matter in a real product
+- `INDEX.md` is the running list. Status stays `queued` until I pick one to implement
+- Duplicates are not re-logged. If a day has nothing new, skip the append
 
 ## Layout
 
 ```
-INDEX.md              running list
-ideas/YYYY-MM-DD.md   that day's three candidates
+INDEX.md              running list across months
+ideas/YYYY-MM.md      that month's page (daily entries)
 ```
 
 ## Status values
