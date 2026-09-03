@@ -20,7 +20,7 @@ This note stays in the private `ai-security-ideas` repo. It is not an implementa
 | C / C++ kernels | No as a test-gen language. Files can be indexed for search. No GoogleTest / Catch2 / CTest generator. | Copilot Chat **`/tests`** in Visual Studio + GoogleTest or Catch2 |
 | Fortran solvers | No. Zero real Fortran hits in the repo. | Characterization tests (golden files) + [pFUnit](https://github.com/Goddard-Fortran-Ecosystem/pFUnit) + Copilot Chat |
 | WPF desktop UI | No. | Unit-test ViewModels first. Later **FlaUI** only. Do not start WinAppDriver. |
-| Coverage-gap hunting | Weak vs `gcov` / VS coverage. | VS coverage (2026: Community+) or OpenCppCoverage, then Copilot fills listed gaps |
+| Coverage-gap hunting | Weak vs `gcov` / VS coverage. C# **dotCover XML** is the one AQE format that fits. | VS coverage (2026: Community+) or OpenCppCoverage, then Copilot fills listed gaps |
 
 AQE **can** be wired into GitHub Copilot as an MCP server. That is an IDE plugin, not a replacement for Copilot Enterprise. AQE still needs its **own** LLM keys. It does not call GitHub Copilot as the model.
 
@@ -30,17 +30,18 @@ If you try AQE at all, try it later on a **small isolated C# class library**, wi
 
 ## What AQE actually is
 
-AQE is a Node.js (>=18) CLI + MCP server marketed as an "Agentic Quality Engineering Fleet."
+AQE is a Node.js (>=18) CLI + MCP server marketed as an "Agentic Quality Engineering Fleet." Not a VS Code extension of its own. npm `agentic-qe@3.14.0` (MIT, ~5k weekly downloads, last push 1 Sep 2026). Real package, wrong stack.
 
 - Install: `npm install -g agentic-qe` then `aqe init --auto`
 - Binaries: `aqe`, `agentic-qe`, `aqe-mcp`
 - First-class host: Claude Code. Copilot is an MCP client of the same server.
-- README test-framework list: Jest, Vitest, Playwright, Cypress, pytest, JUnit, Go, Rust, Swift, Flutter
 - Windows: native deps (`hnswlib-node`) often fail to build. JS fallback is documented as unsuitable for large indexes.
 
 Canonical test-gen languages (`src/shared/types/test-frameworks.ts`): `typescript`, `javascript`, `python`, `java`, `csharp`, `go`, `rust`, `swift`, `kotlin`, `dart`. **Not** C, C++, Fortran, WPF.
 
-C# detector looks at `*.csproj` in the **project root only**. Dedicated NUnit generator is still listed as future (xUnit alias).
+Shipped C# generator is **xUnit**. NUnit is a factory **alias** to that generator; `[TestCase]` is explicitly not supported. Playwright/Cypress are in the type enum but the factory **throws** `not yet implemented`. Tree-sitter grammars on disk include `tree-sitter-c_sharp.wasm`. No C, C++, or Fortran grammar.
+
+Coverage parser formats (`coverage-parser.ts`): lcov, cobertura, json, jacoco, **dotcover**, tarpaulin, gocover, kover, xcresult. **No gcov, llvm-cov, or OpenCppCoverage.**
 
 ---
 
@@ -108,6 +109,10 @@ Knowledge bases retired 1 Nov 2025 (use Spaces). Copilot Extensions (GitHub Apps
 
 VS 2026 or VS 2022 17.14+. Org policy **MCP servers in Copilot** must be on. Config: `<solution>\.mcp.json` plus what AQE writes to `.vscode/mcp.json`.
 
+Copilot Enterprise is the **host that calls AQE tools**. It is **not** an AQE HybridRouter provider. There is no `copilot` / GitHub Models provider id. AQE's own LLM still wants Anthropic, OpenAI, Azure OpenAI, Bedrock, Gemini, OpenRouter, or Ollama, or `AQE_LLM_ROUTER_DISABLED=1`.
+
+Even with AQE on Ollama, Copilot Chat as host still sends prompts to GitHub/Microsoft. Two data paths, not one.
+
 ---
 
 ## Tomorrow-morning runbook (office)
@@ -141,6 +146,14 @@ VS 2022 coverage: **Enterprise only**. **VS 2026: Community / Professional / Ent
 
 ### 5. Optional AQE lab: skip unless legal + Node + Ollama/Azure OpenAI already approved. Isolated tiny C# lib only.
 
+If you do the lab, prefer a global install (not `npx @latest` on every start) and:
+
+```powershell
+aqe test generate --file path\to\Service.cs --framework xunit --type unit
+```
+
+Ask for `nunit` and you still get xUnit-shaped tests.
+
 **Do not tomorrow:** npm-install AQE on the product tree; IntelliTest; WinAppDriver; Diffblue/Qodo/Testsigma; cloud coding agent against the WPF .sln.
 
 ---
@@ -163,7 +176,7 @@ VS 2022 coverage: **Enterprise only**. **VS 2026: Community / Professional / Ent
 | skip | Symflower, Functionize | Wrong stack / web only |
 | skip | WinAppDriver / Coded UI | Unmaintained / dead |
 | skip | mutmut / Hypothesis | Python only |
-| lab only | AQE MCP sidecar | C# only, own LLM keys |
+| lab only | AQE MCP sidecar | C# xUnit only, own LLM keys |
 
 ---
 
@@ -183,29 +196,41 @@ Do not mock physics kernels. Do not "fix" solver output to make a test pass.
 
 ---
 
-## Addendum (2026-09-02 evening): extra official sources
+## Addendum: AQE internals checked against source (same evening)
 
-These do not change the verdict. They tighten the C++ path and the skip list.
+Does not change the verdict. Tightens the C# lab path.
 
-1. **C++ `/tests` is documented**, not just free-form Chat. Open an existing test file so Copilot copies Catch2/GTest structure. [C++ Team Blog](https://devblogs.microsoft.com/cppblog/document-build-instructions-and-more-with-enhanced-c-awareness-from-copilot-chat-in-visual-studio/)
-2. **Writing tests tutorial (Enterprise):** https://docs.github.com/en/enterprise-cloud@latest/copilot/tutorials/write-tests
-3. **IntelliTest is a dead end** in VS 2026. Microsoft points at Copilot testing for .NET. [IntelliTest](https://learn.microsoft.com/en-us/visualstudio/test/generate-unit-tests-for-your-code-with-intellitest?view=vs-2022)
-4. **VS 2026 coverage** is not Enterprise-only (Community/Pro too). VS 2022 coverage still is Enterprise-only. [Microsoft.CodeCoverage.Console](https://learn.microsoft.com/en-us/visualstudio/test/microsoft-code-coverage-console-tool?view=visualstudio)
-5. **WinAppDriver is unmaintained.** New WPF UI tests: FlaUI. [FlaUI](https://github.com/FlaUI/FlaUI/)
-6. **Qodo is walking away from generation** (blog 23 Apr 2026). Do not buy it as a Copilot replacement.
-7. **2025 research** (CITYWALK, CPP-UT-Bench) agrees LLMs are weaker on compiled C++ (headers, templates) than on Python/Java. Mitigation is project context + executing tests in VS, not a new vendor. [CITYWALK](https://arxiv.org/html/2501.16155)
-8. Copilot custom instructions/prompt files/skills in `.github/` already cover most of what AQE's "QE fleet" would add, without a second LLM vendor.
+| Claim in README | Runtime fact |
+| --- | --- |
+| NUnit support | Factory aliases NUnit to the **xUnit** generator. `[TestCase]` not supported. |
+| Playwright / Cypress | Type exists; factory **throws** `Generator for '${framework}' not yet implemented`. |
+| C/C++ | Indexing claimed. **No** generator, **no** tree-sitter grammar in `assets/grammars/`. |
+| Fortran / WPF / GoogleTest / Catch2 / CTest / MSTest / SpecFlow / pFUnit | Absent. |
+| Coverage for this shop | **dotCover XML** is the C# format AQE parses. Not gcov / OpenCppCoverage. |
+| Copilot Enterprise as the model | **No.** MCP host only. No `copilot` provider id. |
+| Compile-check generated C# | `compileValidation` defaults **false**. Opt-in `dotnet build` exists in a plan, not the default. |
+
+For proprietary code on an AQE lab: `AQE_LLM_ROUTER_DISABLED=1` or Ollama (`AQE_FREE_TIER=1`), do not set Anthropic/OpenAI keys, prefer `npm install -g` over `npx @latest`. Copilot Chat remains a separate cloud path.
+
+---
+
+## Addendum: extra Copilot / skip-list sources
+
+1. **C++ `/tests` is documented.** [C++ Team Blog](https://devblogs.microsoft.com/cppblog/document-build-instructions-and-more-with-enhanced-c-awareness-from-copilot-chat-in-visual-studio/)
+2. **Writing tests tutorial:** https://docs.github.com/en/enterprise-cloud@latest/copilot/tutorials/write-tests
+3. **IntelliTest is a dead end** in VS 2026. [IntelliTest](https://learn.microsoft.com/en-us/visualstudio/test/generate-unit-tests-for-your-code-with-intellitest?view=vs-2022)
+4. **VS 2026 coverage** is Community/Pro/Enterprise. VS 2022 coverage is Enterprise-only.
+5. **WinAppDriver is unmaintained.** New WPF UI: FlaUI.
+6. **Qodo is deprecating code generation** (Apr 2026).
+7. CITYWALK / CPP-UT-Bench (2025): LLMs are weaker on compiled C++ than Python/Java. Mitigation is project context + running tests in VS.
 
 ---
 
 ## Sources
 
-- AQE README, `package.json` 3.14.0, `src/shared/types/test-frameworks.ts`, `src/mcp/protocol-server.ts`, `docs/platform-setup-guide.md`
+- AQE `package.json` 3.14.0, `src/shared/types/test-frameworks.ts`, `src/domains/test-generation/factories/test-generator-factory.ts`, `src/domains/coverage-analysis/services/coverage-parser.ts`, `docs/platform-setup-guide.md`
 - [Copilot testing for .NET](https://learn.microsoft.com/en-us/visualstudio/test/github-copilot-test-dotnet-overview?view=visualstudio)
 - [C++ `/tests`](https://devblogs.microsoft.com/cppblog/document-build-instructions-and-more-with-enhanced-c-awareness-from-copilot-chat-in-visual-studio/)
 - [Copilot write tests](https://docs.github.com/en/enterprise-cloud@latest/copilot/tutorials/write-tests)
 - [MCP in Visual Studio](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=visualstudio)
 - [Copilot model hosting](https://docs.github.com/en/copilot/reference/ai-models/model-hosting)
-- [IntelliTest](https://learn.microsoft.com/en-us/visualstudio/test/generate-unit-tests-for-your-code-with-intellitest?view=vs-2022)
-- [VS coverage](https://learn.microsoft.com/en-us/visualstudio/test/microsoft-code-coverage-console-tool?view=visualstudio)
-- [Coding agent Windows](https://github.blog/changelog/2026-02-18-use-copilot-coding-agent-with-windows-projects/)
