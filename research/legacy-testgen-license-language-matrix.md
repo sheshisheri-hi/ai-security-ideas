@@ -29,17 +29,20 @@ Legend: **Gen** = writes test *source files*. **Harness** = you/Copilot still wr
 
 | Tool | License (file) | Closed-source product risk | Gen? | C | C++ | C# | Fortran | WPF | Copilot? | VS tomorrow? | AQE-style trap? |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **GitHub Copilot Enterprise** (already have) | Commercial GitHub/MS | None extra | **Yes** | `/tests` if a C test exists | **Yes** `/tests` Catch2/GTest | **Yes** `@Test` xUnit/NUnit/MSTest | **No** first-class | ViewModels only | It *is* Copilot | **Yes** | No |
-| **dotnet/skills `dotnet-test`** (`code-testing-generator`) | **MIT** (`LICENSE`) | Low (permissive) | **Yes** (Copilot writes files, then build/repair) | Not listed | **Yes as markdown skills** GoogleTest/Catch2/doctest/Boost.Test (`extensions/cpp.md`). Detects `CMakeLists.txt` **and** `*.vcxproj` | **Yes** MSTest/xUnit/NUnit/TUnit; classic `packages.config` called out | **Zero hits** for Fortran in the repo | WPF only in *upgrade* plugins, not test-gen | **Yes:** Copilot **CLI** `/plugin install dotnet-test@dotnet-agent-skills`. VS Code preview (`chat.plugins.enabled`). Cursor. Codex. **Visual Studio not in install list** (blog: “working on it”) | **C#/C++ only if you leave VS for CLI/VS Code** | Soft trap: polyglot list looks like AQE’s 11 platforms. C++ is prompt skills, not a C++ parser. Fortran/WPF absent. |
+| **GitHub Copilot Enterprise** (already have) | Commercial GitHub/MS | None extra | **Yes** | `/tests` if a C test exists | **Yes** `/tests` Catch2/GTest | **Yes** `@Test` xUnit/NUnit/MSTest | **No** first-class | ViewModels only | It *is* Copilot | **Yes** | Mild: `@Test` product page is C# only. Don’t read Fortran/WPF into “any language.” |
+| **dotnet/skills `dotnet-test`** (`code-testing-generator`) | **MIT** (`LICENSE`) | Low (permissive) | **Yes** (Copilot writes files, then build/repair) | **No `c.md`** | **Yes `extensions/cpp.md`** GoogleTest/Catch2/doctest/Boost.Test. Detects `CMakeLists.txt` **and** `*.vcxproj` | **Yes `extensions/dotnet.md`** MSTest/xUnit/NUnit/TUnit; classic `packages.config` | **No `fortran.md`** | No WPF test extension | **Yes:** Copilot **CLI** `/plugin install dotnet-test@dotnet-agent-skills`. VS Code preview. Cursor. Codex. **Visual Studio not in README install list** | **C#/C++ only if you leave VS for CLI/VS Code** | Agent says “any language”; extension table is the truth. Fortran/C/WPF missing. |
 | **Agentic-QE** | **MIT** (`LICENSE`) | Low | Partial | **No** generator | **No** | **Advertised csharp**; factory is xUnit-shaped; older `qe/tests/generate` types omit csharp | **No** | **No** | MCP host only; `--with-copilot` writes `.vscode/mcp.json` + instructions. No 60 agents | C# lab only, Enterprise MCP off by default | **The trap you already hit** |
-| **UTBotCpp** | **Apache-2.0** (`LICENSE`) | Low for *using* the binary; tests it writes are your code | **Yes** Google Test regression/error suites | **Yes** | **Yes** | **No** | **No** | **No** | **No.** Own VS Code VSIX, not Copilot | **No.** README: “only use UTBot under Ubuntu 20.04 and above” | Language OK for C/C++, OS/IDE trap |
-| **qodo-cover (Cover-Agent)** | **AGPL-3.0** (`LICENSE`) | **High.** Copyleft + network clause. Unmaintained. Do not put on the product tree. Counsel if anyone insists. | **Yes** (appends to existing test files; C/C++/C# docker fixtures exist) | Fixtures yes | Fixtures yes | Fixtures yes | **No** | **No** | **No** (own LLM keys) | No | License trap + dead project |
-| **FortranTestGenerator** | **GPL-3.0** (`LICENSE`) | **High** if you ship/link it. Generated capture/replay code: ask counsel. | **Yes** (capture instrumentation + replay *driver*). You still write asserts. | No | No | No | **Yes** (F90+, gfortran assembler, Serialbox2) | No | **No** | **No** (2019, HPC/gfortran) | License + compiler trap |
-| **pFUnit** | **Apache-2.0** (`LICENSE`, NASA) | Low | **No** (framework) | No | No | No | Harness only | No | Copilot can *author* `@test` into it | Week 2–3 if Intel Fortran + CMake | Not a generator |
-| **ApprovalTests.cpp** | **Apache-2.0** (`LICENSE`) | Low | **No** (oracle files after you write a test) | via C++ tests | **Yes** | No | No | No | Copilot writes the one-liner | Yes as a library | Not a generator |
-| **ApprovalTests.Net** | **Apache-2.0** (`LICENSE.md`) | Low | **No** | No | No | **Yes** (library) | No | screenshot package exists; still not a generator | Copilot writes `Approvals.Verify` | Yes as a NuGet | Not a generator |
-| **KLEE** | UIUC-style (LLVM family) | Generally OK to run; not a VS product | Inputs, not Catch2/GTest files | LLVM C | limited | No | No | No | No | Linux | Wrong shape |
-| **VectorCAST ATG / Parasoft C/C++test / Coyote C++** | Proprietary paid | Contract | Vendor claims yes for C/C++ | Yes (paid) | Yes (paid) | Parasoft dotTEST for C# (overlap with `@Test`) | **No** | **No** | Parasoft 2026.1 mentions AI/MCP — **UNKNOWN** vs Copilot | Not tomorrow (sales + install) | Don’t confuse with Copilot |
+| **UTBotCpp** | **Apache-2.0** (`LICENSE`) | Low for *using* the binary | **Yes** Google Test only (`TestsPrinter`, `GTestLogger`). **No Catch2 printer.** | **Yes** (`Language.h`: `C, CXX, ANY, UNKNOWN`) | **Yes** | **No** | **No** | **No** | **Nothing.** Own VS Code VSIX. | **No.** Ubuntu 20.04+ only | Don’t infer Catch2/Fortran. OS trap. |
+| **qodo-cover (Cover-Agent)** | **AGPL-3.0** (`LICENSE`) | **High.** Copyleft + AGPL §13 network clause. Unmaintained. Counsel before any use. | Appends to `--test-file-path`. Full-repo mode **Python only** (`NotImplementedError` otherwise). | Template `templated_tests/c_cli` | Template `cpp_cli` | Template `csharp_webservice` | **No template.** `language_extensions.toml` lists FORTRAN because it is a **GitHub-linguist dump** (ABAP…Zig), not a generator list | **No** | **Nothing** | No | **Yes — same class as AQE.** Linguist map ≠ generator. |
+| **FortranTestGenerator** | **GPL-3.0** (`LICENSE`) | **High** if you ship/link it. | Capture + replay `.f90` driver (`DEFAULT_SUFFIX = '.f90'`). You still write asserts. | No | No | No | **Yes** (gfortran `-S`, Serialbox2, 2019) | No | **Nothing** | **No** | GPL + compiler trap |
+| **pFUnit** | **Apache-2.0** (`LICENSE`, NASA) | Low | **No.** `funitproc` converts `.pf` → `.F90`. You author tests. | No | No | No | Harness only | No | Copilot can *author* `@test` into it | Week 2–3 if Intel Fortran + CMake | “Unit testing” ≠ auto-generation |
+| **ApprovalTests.cpp** | **Apache-2.0** (`LICENSE`) | Low | **No** (`.approved.*` oracles) | via C++ tests | Library | No | No | No | Copilot writes the one-liner | Yes as a library | Snapshot oracle, not a generator |
+| **ApprovalTests.Net** | **Apache-2.0** (`LICENSE.md`) | Low | **No.** Readme: not actively maintained. | No | No | Library | No | `ApprovalTests.Net.Wpf` is UI snapshot verify, not codegen | Copilot writes `Approvals.Verify` | Yes as a NuGet | WPF bullet ≠ WPF generator |
+| **KLEE** | NCSA/UIUC (`LICENSE.TXT`) | Low (attribution) | **No test source.** Emits `.ktest` inputs. | Clang bitcode | optional libc++ | No | No | No | Nothing | Linux/macOS/FreeBSD. No Windows. | “Test generation” = path inputs |
+| **VectorCAST ATG** | Proprietary | Contract | Yes (C/C++/Ada; GoogleTest-syntax option) | Yes | Yes | No | **UNKNOWN** (not listed) | No | VS Code Test Explorer. No Copilot claim in unpaid docs. | After purchase | Fortran UNKNOWN |
+| **Parasoft C/C++test 2026.1** | Proprietary | Contract | Vendor: yes. 2025.2 unpaid MCP table is **coverage/docs**, not ATG. 2026.1 marketing says test gen. | Yes | Yes | No | UNKNOWN | No | MCP stdio; Copilot mentioned in 2025.2 docs | After license | Confirm 2026.1 MCP **tool list** with vendor |
+| **Parasoft dotTEST 2026.1** | Proprietary | Contract | Claims AI unit tests for uncovered .NET lines | No | No | **Yes** | No | **UNKNOWN** | Copilot **CLI** `dottestmcp.bat` + skill | After license | Don’t assume WPF from “.NET” |
+| **Codemind Coyote C++** | Proprietary | Contract | Auto harness + concolic cases | Yes | Yes | No | No | No | No Copilot/MCP in unpaid FAQ | After purchase | Not Microsoft’s .NET “Coyote” |
 
 ---
 
@@ -57,10 +60,11 @@ Legend: **Gen** = writes test *source files*. **Harness** = you/Copilot still wr
 ## AQE-style traps, named
 
 1. **AQE** — MIT, Copilot row in README, no C/C++/Fortran generator, Copilot is MCP not the model.
-2. **dotnet-test “polyglot”** — MIT, real C# pipeline, C++ is `extensions/cpp.md` guidance (Catch2/GTest examples). Fortran not in the repo. Install path is CLI/VS Code, not Visual Studio.
-3. **UTBotCpp** — really does emit Google Test for C/C++, Apache-2.0, **Ubuntu only**, not Copilot.
-4. **Cover-Agent** — C/C++/C# examples exist, **AGPL-3.0**, unmaintained, not Copilot.
-5. **FortranTestGenerator** — really does generate Fortran *drivers*, **GPL-3.0**, 2019, gfortran, not Copilot.
+2. **Cover-Agent `language_extensions.toml`** — FORTRAN appears next to ABAP because it is GitHub Linguist. Templates: no Fortran. Full-repo: Python or `NotImplementedError`. **AGPL-3.0.**
+3. **dotnet-test “you are polyglot / any language”** — MIT, real `cpp.md` + `dotnet.md`. No `fortran.md`, no `c.md`. CLI/VS Code, not Visual Studio.
+4. **UTBotCpp** — `Language { C, CXX }` and GoogleTest printers only. Ubuntu. Not Copilot. Not Catch2.
+5. **KLEE / ApprovalTests / pFUnit** — “tests” means inputs, oracles, or a preprocessor, not ATG.
+6. **Parasoft MCP** — unpaid 2025.2 tool list is coverage/search; 2026.1 banner says generation. Get the tool names in writing.
 
 ---
 
@@ -76,10 +80,12 @@ Tomorrow: Visual Studio + Copilot `@Test` (C#) and `/tests` (C++). Fortran = gol
 
 ## Sources (files)
 
-- `dotnet/skills` `LICENSE` (MIT); `README.md` install (Copilot CLI / VS Code / Cursor / Codex); `plugins/dotnet-test/plugin.json`; `plugins/dotnet-test/README.md`; `plugins/dotnet-test/skills/code-testing-extensions/extensions/cpp.md`
-- `proffesor-for-testing/agentic-qe` `LICENSE` (MIT); Copilot installer (earlier note)
-- `UnitTestBot/UTBotCpp` `LICENSE` (Apache-2.0); `README.md` Ubuntu-only
-- `qodo-ai/qodo-cover` `LICENSE` (AGPL-3.0)
-- `fortesg/fortrantestgenerator` `LICENSE` (GPL-3.0)
-- `Goddard-Fortran-Ecosystem/pFUnit` `LICENSE` (Apache-2.0)
-- `approvals/ApprovalTests.cpp` `LICENSE` (Apache-2.0); `approvals/ApprovalTests.Net` `LICENSE.md` (Apache-2.0)
+- `dotnet/skills` `LICENSE` (MIT); `plugins/dotnet-test/skills/code-testing-extensions/SKILL.md` (language table); `extensions/cpp.md`; `code-testing-generator.agent.md`
+- `proffesor-for-testing/agentic-qe` `LICENSE` (MIT)
+- `UnitTestBot/UTBotCpp` `LICENSE`; `server/src/Language.h`; `server/src/printers/`
+- `qodo-ai/qodo-cover` `LICENSE` (AGPL-3.0); `templated_tests/README.md`; `cover_agent/main_full_repo.py`; `language_extensions.toml`
+- `fortesg/fortrantestgenerator` `LICENSE` (GPL-3.0); `generator.py`
+- `klee/klee` `LICENSE.TXT` (NCSA)
+- `Goddard-Fortran-Ecosystem/pFUnit` `LICENSE`; `bin/funitproc`
+- `approvals/ApprovalTests.cpp` `LICENSE`; `approvals/ApprovalTests.Net` `LICENSE.md`
+- Microsoft Learn: Copilot testing for .NET (C# only); C/C++ `/tests`
