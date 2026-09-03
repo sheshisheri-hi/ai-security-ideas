@@ -9,13 +9,19 @@ Private weekday log of papers, protocol notes, and tools. I pick from here later
 - Each entry says what the paper/tech/tool is, how it works, and why it would matter in a real product
 - `INDEX.md` is the running list. Status stays `queued` until I pick one to implement
 - Duplicates are not re-logged. If a day has nothing new, skip the append
+- Ad-hoc research (not a daily candidate) goes under `research/`
 
 ## Layout
 
 ```
 INDEX.md              running list across months
 ideas/YYYY-MM.md      that month's page (daily entries)
+research/             one-off evals (not implementation picks)
 ```
+
+## Ad-hoc research
+
+- [Legacy test generation vs Agentic-QE](research/legacy-test-generation-agentic-qe.md) (2026-09-02)
 
 ## Status values
 
