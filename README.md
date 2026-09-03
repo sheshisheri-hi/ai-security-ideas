@@ -23,6 +23,7 @@ research/             one-off evals (not implementation picks)
 
 - [Legacy test generation vs Agentic-QE](research/legacy-test-generation-agentic-qe.md) (2026-09-02)
 - [AQE + GitHub Copilot how-to (from source)](research/aqe-github-copilot-howto.md) (2026-09-02)
+- [Legacy test-gen papers and GitHub repos](research/legacy-testgen-papers-and-repos.md) (2026-09-02)
 
 ## Status values
 
