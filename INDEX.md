@@ -8,3 +8,6 @@
 | 2026-09-02 | 2026-09-02-a | SkillGuard (reachability confinement) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-02 | 2026-09-02-b | Delegation Without Trust | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-02 | 2026-09-02-c | Defense-as-Skill (SkillSonar) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-03 | 2026-09-03-a | ACLE-MCP (attested capability leases) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-03 | 2026-09-03-b | MCP-to-A2A public-sharing egress | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-03 | 2026-09-03-c | Context Privilege Escalation (CoRA) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
