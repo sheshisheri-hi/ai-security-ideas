@@ -84,7 +84,7 @@ So: Copilot **does** support AQE QE **if** Agent mode is on and Copilot **choose
 
 ## Which MCP tools **create** tests
 
-From [`docs/tool-compatibility.md`](https://github.com/proffesor-for-testing/agentic-qe/blob/main/docs/tool-compatibility.md) (40+ tools, same server Copilot attaches to):
+From [`docs/tool-compatibility.md`](https://github.com/proffesor-for-testing/agentic-qe/blob/main/docs/tool-compatibility.md) and [`src/mcp/protocol-server.ts`](https://github.com/proffesor-for-testing/agentic-qe/blob/main/src/mcp/protocol-server.ts) (40+ tools, same server Copilot attaches to):
 
 **Create / design**
 
@@ -98,7 +98,22 @@ From [`docs/tool-compatibility.md`](https://github.com/proffesor-for-testing/age
 - `coverage_analyze_sublinear` — find holes (then you still need generate)
 - `quality_assess`, `security_scan_comprehensive`, `defect_predict`, `chaos_test`, `accessibility_test`
 
-`test_generate_enhanced` still only emits languages in `SupportedLanguage` (TS/JS/Python/Java/C#/Go/Rust/Swift/Kotlin/Dart). C/C++/Fortran/WPF stay out. Copilot does not magically add those languages.
+Exact `test_generate_enhanced` parameters Copilot will see:
+
+| Param | Notes |
+| --- | --- |
+| `sourceCode` | source text |
+| `filePath` | import target in generated tests |
+| `language` | enum: typescript, javascript, python, java, **csharp**, go, rust, swift, kotlin, dart. **No c, cpp, fortran.** |
+| `testType` | unit, integration, e2e |
+| `framework` | includes **xunit**, **nunit**. No GoogleTest, Catch2, MSTest, pFUnit |
+| `coverageGoal` | default 80 |
+| `aiEnhancement` | default true |
+| `detectAntiPatterns` | default false |
+
+Example in the tool description is JavaScript/jest. Copilot will copy that shape unless you name csharp/xunit.
+
+`test_generate_enhanced` still only emits those languages. C/C++/Fortran/WPF stay out. Copilot does not magically add them.
 
 ---
 
@@ -133,9 +148,9 @@ If Copilot writes tests **without** calling AQE, it is using Copilot's own gener
 
 ### B. Visual Studio 2022 17.14+ / VS 2026
 
-AQE does **not** write `<solution>\.mcp.json`. It only writes `.vscode/mcp.json`. Visual Studio **does** read `.vscode/mcp.json` (4th discovery path in Microsoft docs), so the same init often works.
+AQE does **not** write `<solution>\\.mcp.json`. It only writes `.vscode/mcp.json`. Visual Studio **does** read `.vscode/mcp.json` (4th discovery path in Microsoft docs), so the same init often works.
 
-Safer for VS: copy the same JSON to `<solution>\.mcp.json` (source-controlled) or `%USERPROFILE%\.mcp.json` (all solutions).
+Safer for VS: copy the same JSON to `<solution>\\.mcp.json` (source-controlled) or `%USERPROFILE%\\.mcp.json` (all solutions).
 
 Then: Copilot Chat → Agent → enable tools → same prompt as above.
 
@@ -148,7 +163,7 @@ Then: Copilot Chat → Agent → enable tools → same prompt as above.
 ### D. Command line, no IDE
 
 ```powershell
-aqe test generate --file path\to\Service.cs --framework xunit --type unit
+aqe test generate --file path\\to\\Service.cs --framework xunit --type unit
 ```
 
 That is AQE without Copilot. Copilot is not involved.
@@ -171,8 +186,8 @@ That is AQE without Copilot. Copilot is not involved.
 aqe platform list
 aqe platform verify copilot
 # expect .vscode/mcp.json and .github/copilot-instructions.md present
-Get-Content .vscode\mcp.json
-Get-Content .github\copilot-instructions.md
+Get-Content .vscode\\mcp.json
+Get-Content .github\\copilot-instructions.md
 ```
 
 In Copilot Agent, you should see an MCP server named `agentic-qe`. If you only see Copilot built-in tools, org MCP policy is off or VS/VS Code did not load `.vscode/mcp.json`.
@@ -184,6 +199,7 @@ In Copilot Agent, you should see an MCP server named `agentic-qe`. If you only s
 - `src/init/copilot-installer.ts`
 - `src/init/platform-config-generator.ts` (`PLATFORM_REGISTRY.copilot`, `AQE_RULES_CONTENT`, `getMcpServerEntry`)
 - `src/cli/handlers/init-handler.ts` (`--with-copilot`)
+- `src/mcp/protocol-server.ts` (`test_generate_enhanced` schema)
 - `docs/platform-setup-guide.md`
 - `docs/tool-compatibility.md`
 - Microsoft: [MCP in Visual Studio](https://learn.microsoft.com/en-us/visualstudio/ide/mcp-servers?view=visualstudio)
