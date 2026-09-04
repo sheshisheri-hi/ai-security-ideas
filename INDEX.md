@@ -11,3 +11,6 @@
 | 2026-09-03 | 2026-09-03-a | ACLE-MCP (attested capability leases) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-03 | 2026-09-03-b | MCP-to-A2A public-sharing egress | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-03 | 2026-09-03-c | Context Privilege Escalation (CoRA) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-04 | 2026-09-04-a | HookPry (lifecycle-hook update attacks) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-04 | 2026-09-04-b | ContextLeak (malicious-tool context exfiltration) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-04 | 2026-09-04-c | SkillShift (covert skill policy steering) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
