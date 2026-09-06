@@ -12,7 +12,7 @@ This note stays in the private `ai-security-ideas` repo. It is a design-time che
 
 ## Direct answer
 
-If the host already has an Entra JWT, **every C# MCP server that will act on that token MUST validate it itself**. That is true for Streamable HTTP **and** for stdio. HTTP has a normative OAuth 2.1 resource-server profile. Stdio does not. Invent a stdio delivery profile (environment variable) and reuse the **same** JWT validation rules. Do not treat process launch, localhost binding, or "the host already signed in" as authentication.
+If the host already has an Entra JWT, **every C# MCP server that will act on that token MUST validate it itself**. That is true for Streamable HTTP **and** for stdio. HTTP has a normative OAuth 2.1 resource-server profile. Stdio does not. Invent a stdio delivery profile (environment variable by default, official-leaning; optional custom `_meta.authorization` if you control host and server) and reuse the **same** JWT validation rules. Do not treat process launch, localhost binding, or "the host already signed in" as authentication.
 
 The official 2026-07-28 authorization specification applies to HTTP-based transports. Implementations using stdio **SHOULD NOT** follow that HTTP OAuth flow and should retrieve credentials from the environment instead. Retrieval is not validation. Validation is still required if the server will honor the token.
 
@@ -94,12 +94,60 @@ Official text: stdio implementations **SHOULD NOT** follow the HTTP authorizatio
 
 Invented profile for this design (not official MCP, but the only way both transports honor the same Entra JWT):
 
-1. **Delivery.** The host places the raw Entra access token in a dedicated environment variable when it launches the subprocess (for example `MCP_ACCESS_TOKEN`). Do not put the token on `argv`. Do not write it to a world-readable file. Do not log `stdout`/`stderr` that might echo it.
-2. **Same validation.** The stdio server MUST run the same JWT checks as the HTTP resource server: signature against Entra JWKS, `iss`, `aud`, `exp`/`nbf`, token type (delegated `scp` vs app-only `roles`), and tenant if you pin one. Failure is a hard refuse: do not handle tools, prompts, or resources.
-3. **Identity into the SDK.** Official C# identity propagation copies `HttpContext.User` on HTTP. On stdio, `ClaimsPrincipal` is **null** unless a message filter sets `context.User`. After the JWT validates, the filter builds a `ClaimsPrincipal` from the token claims so tools can take `ClaimsPrincipal` the same way on both transports. Do not inject a synthetic "stdio-user" principal without validating a token.
-4. **No PRM / no Origin on the pipe.** Do not fake `WWW-Authenticate` on stdout. Do not skip JWT validation because the process is local. Local launch is a trust boundary for *who can start the process*, not for *who the token is for*.
+1. **Delivery (default / official-leaning).** The host places the raw Entra access token in a dedicated environment variable when it launches the subprocess (for example `MCP_ACCESS_TOKEN`). This is the default path and matches MCP guidance to retrieve credentials from the environment. Do not put the token on `argv`. Do not write it to a world-readable file. Do not log `stdout`/`stderr` that might echo it.
+2. **Delivery (optional custom alternative).** `_meta.authorization` on each JSON-RPC message is an org-specific profile, not official MCP. There is no normative `_meta.authorization` for stdio. Use it only when you control host and server and need rotation or per-call identity. Documented in [Stdio JWT delivery: env vs `_meta.authorization`](#stdio-jwt-delivery-env-vs-_metaauthorization).
+3. **Same validation.** The stdio server MUST run the same JWT checks as the HTTP resource server: signature against Entra JWKS, `iss`, `aud`, `exp`/`nbf`, token type (delegated `scp` vs app-only `roles`), and tenant if you pin one. Failure is a hard refuse: do not handle tools, prompts, or resources. Same non-negotiables apply whichever delivery path you pick.
+4. **Identity into the SDK.** Official C# identity propagation copies `HttpContext.User` on HTTP. On stdio, `ClaimsPrincipal` is **null** unless a message filter sets `context.User`. After the JWT validates, the filter builds a `ClaimsPrincipal` from the token claims so tools can take `ClaimsPrincipal` the same way on both transports. Do not inject a synthetic "stdio-user" principal without validating a token.
+5. **No PRM / no Origin on the pipe.** Do not fake `WWW-Authenticate` on stdout. Do not skip JWT validation because the process is local. Local launch is a trust boundary for *who can start the process*, not for *who the token is for*.
 
-This profile is an engineering convention. Call it out as invented in any implementation repo so it is not mistaken for 2026-07-28 text.
+This profile is an engineering convention. Env delivery is the official-leaning default. `_meta.authorization` is an optional custom alternative. Call both out as invented in any implementation repo so they are not mistaken for 2026-07-28 text.
+
+---
+
+## Stdio JWT delivery: env vs `_meta.authorization`
+
+Official MCP Authorization (2026-07-28): stdio **SHOULD NOT** follow the HTTP OAuth flow; retrieve credentials from the environment. There is no normative `_meta.authorization` for stdio.
+
+### Env var at spawn (official-leaning)
+
+**Pros**
+
+- Matches MCP guidance (“credentials from the environment”)
+- Works with stock hosts that can set `env` in MCP config
+- Token stays off the JSON-RPC wire (less accidental log leakage of the protocol body)
+- One validate-at-startup (or first use) path — simple in C#
+- Child process isolation: only that process sees the env if you don’t inherit broadly
+
+**Cons**
+
+- Token lifetime ≈ process lifetime; refresh usually means restart
+- Env can leak via `/proc`, crash dumps, process dumps, overly broad environment inheritance
+- Harder to rotate mid-session or do step-up scopes without respawn
+- Easy to misconfigure (token in shared parent env, argv fallback, config files)
+
+### `_meta.authorization` on each message (custom profile)
+
+**Pros**
+
+- Per-request (or per-batch) token: rotation and step-up without restart
+- Fits “validate every call” mental model same as HTTP Bearer
+- Host can swap user/tenant tokens if one stdio process is multiplexed (advanced)
+- Token not sitting in process env for the whole lifetime
+
+**Cons**
+
+- Not in the MCP Authorization spec — third-party hosts won’t send it unless you teach them
+- Token rides in message metadata → higher risk of capture in protocol logs, OpenTelemetry attributes, debug traces
+- Every call path must attach + server must reject missing/invalid `_meta` (easy to forget on notifications / `tools/list`)
+- You invent schema (`_meta.authorization` vs Authorization string vs object) and version it yourself
+- Slightly more host/server coupling and test surface
+
+### Practical pick
+
+- Interop / default host config → env
+- You control host + server and care about rotation / per-call identity → `_meta` (document as org profile; still validate like HTTP)
+
+Same non-negotiables either way: `iss`, JWKS/sig, `aud`, `exp`, scopes/roles; never log the raw JWT; fail closed.
 
 ---
 
@@ -123,7 +171,7 @@ Entra is a compatible authorization server if you force it onto the MCP resource
 
 ## Gaps (official spec)
 
-1. **No stdio JWT profile.** Stdio is "get credentials from the environment." There is no MUST for JWT validation, claim set, env var name, rotation, or how to fail. The invented profile above fills that hole for Entra hosts. It is not protocol text.
+1. **No stdio JWT profile.** Stdio is "get credentials from the environment." There is no MUST for JWT validation, claim set, env var name, rotation, or how to fail. There is also no normative `_meta.authorization`. The invented profile above fills that hole for Entra hosts (env as the official-leaning default; `_meta.authorization` as an optional custom alternative). It is not protocol text.
 2. **No normative audit schema.** 2026-07-28 tells you to validate tokens and not leak data to unauthorized parties. It does not define an audit record, hash chain, or receipt format. SEP-3004 is out of scope here because it is not Final. If you need audit, invent a private log schema; do not claim MCP compliance for it.
 3. **Audience identifier split.** RFC 8707 wants the MCP HTTP URI in `resource` / `aud`. Enterprise IdPs (Entra especially) want App ID URIs. The spec does not define a mapping profile.
 4. **Authorization is OPTIONAL.** A C# server can ship with no auth and still be spec-valid. Enterprise hosts that already have Entra JWTs should treat validation as mandatory in *product* policy, not because the revision requires every server to implement OAuth.
