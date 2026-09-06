@@ -10,6 +10,8 @@ This note stays in the private `ai-security-ideas` repo. It is a design-time che
 
 **ADR:** [ADR-001: MCP server OAuth with Microsoft Entra (HTTP + stdio)](adr/001-mcp-server-oauth-entra.md)
 
+Credential-flow sequence diagrams (HTTP Bearer and each stdio delivery) live in [ADR-001 — Flows](adr/001-mcp-server-oauth-entra.md#flows-sequence-diagrams). Pick a profile with the [decision tree](adr/001-mcp-server-oauth-entra.md#decision-tree-pick-one) rather than a follow-up chat.
+
 ---
 
 ## Direct answer
