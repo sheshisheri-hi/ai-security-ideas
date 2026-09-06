@@ -25,6 +25,7 @@ research/             one-off evals (not implementation picks)
 - [AQE + GitHub Copilot how-to (from source)](research/aqe-github-copilot-howto.md) (2026-09-02)
 - [Legacy test-gen papers and GitHub repos](research/legacy-testgen-papers-and-repos.md) (2026-09-02)
 - [License + language matrix (C/C++/C#/Fortran/WPF + Copilot)](research/legacy-testgen-license-language-matrix.md) (2026-09-02)
+- [MCP C# Entra JWT design-time auth checklist (official 2026-07-28)](research/2026-09-06-mcp-csharp-entra-auth-design.md) (2026-09-06)
 
 ## Status values
 

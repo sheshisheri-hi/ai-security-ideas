@@ -18,3 +18,9 @@
 | 2026-09-06 | 2026-09-06-b | ROPE (Routed Origin Policy Enforcement) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-06 | 2026-09-06-c | SEP-3004 Tamper-Evident Audit Record Contract | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-06 | 2026-09-06-d | Deadbugz (runtime-gated MCP metadata poisoning) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+
+## Ad-hoc research
+
+Not daily candidates. Full pages live under `research/`.
+
+- [MCP C# Entra JWT design-time auth checklist (official 2026-07-28)](research/2026-09-06-mcp-csharp-entra-auth-design.md) (2026-09-06)
