@@ -8,6 +8,8 @@
 
 This note stays in the private `ai-security-ideas` repo. It is a design-time checklist, not an implementation.
 
+**ADR:** [ADR-001: MCP server OAuth with Microsoft Entra (HTTP + stdio)](adr/001-mcp-server-oauth-entra.md)
+
 ---
 
 ## Direct answer
