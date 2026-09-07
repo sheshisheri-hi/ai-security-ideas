@@ -18,6 +18,10 @@
 | 2026-09-06 | 2026-09-06-b | ROPE (Routed Origin Policy Enforcement) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-06 | 2026-09-06-c | SEP-3004 Tamper-Evident Audit Record Contract | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-06 | 2026-09-06-d | Deadbugz (runtime-gated MCP metadata poisoning) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-07 | 2026-09-07-a | FGLGuard (federated topology-guided MAS safety) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-07 | 2026-09-07-b | HarnessRisk (lifecycle harness safety benchmark) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-07 | 2026-09-07-c | SEP-2643 Structured Authorization Denials | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-07 | 2026-09-07-d | Bifrost (Maxim AI MCP + LLM gateway) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 
 ## Ad-hoc research
 
