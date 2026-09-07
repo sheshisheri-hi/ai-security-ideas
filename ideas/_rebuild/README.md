@@ -1,0 +1,1 @@
+Staging area for month page rebuild. Parts are base64 shards of ideas/2026-09.md.
