@@ -26,6 +26,10 @@
 | 2026-09-08 | 2026-09-08-b | IPI as test-time search (agentic attacker harness) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-08 | 2026-09-08-c | Channel-policy per-send attestation (Enterprise IG) | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-08 | 2026-09-08-d | Apache Maka (event-sourced agent workspace) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-09 | 2026-09-09-a | AgentDrift (step-labeled IPI hijack trajectories) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-09 | 2026-09-09-b | MOLE (insider-threat detection for AI agents) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-09 | 2026-09-09-c | SEP-3140 Signed Capability Declarations | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-09 | 2026-09-09-d | v4scan (deterministic MCP/skill install scanner) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 
 ## Ad-hoc research
 
