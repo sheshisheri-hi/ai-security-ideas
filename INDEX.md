@@ -30,6 +30,10 @@
 | 2026-09-09 | 2026-09-09-b | MOLE (insider-threat detection for AI agents) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-09 | 2026-09-09-c | SEP-3140 Signed Capability Declarations | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-09 | 2026-09-09-d | v4scan (deterministic MCP/skill install scanner) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-11 | 2026-09-11-a | No-Box / MCPSEC (description-only IPI audit) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-11 | 2026-09-11-b | CapScope (capability-scoped coding harness) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-11 | 2026-09-11-c | SEP-2817 AI Invocation Audit Context | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-11 | 2026-09-11-d | OpenAPPA (deterministic agentic flow policy) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 
 ## Ad-hoc research
 
