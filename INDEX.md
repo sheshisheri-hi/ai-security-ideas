@@ -35,6 +35,7 @@
 | 2026-09-11 | 2026-09-11-c | SEP-2817 AI Invocation Audit Context | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-11 | 2026-09-11-d | OpenAPPA (deterministic agentic flow policy) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-12 | 2026-09-12-a | MCP meta-gate showcase (2817 + channel attestation + ROPE-lite + 2643) | sample | shipped | — |
+| 2026-09-12 | 2026-09-12-b | MCP call-attestation lite (2787 + 3140 + thin 3004) | sample | shipped | — |
 
 ## Ad-hoc research
 
@@ -42,3 +43,4 @@ Not daily candidates. Full pages live under `research/`.
 
 - [MCP C# Entra JWT design-time auth checklist (official 2026-07-28)](research/2026-09-06-mcp-csharp-entra-auth-design.md) (2026-09-06)
 - **Public sample (2026-09-12):** [mcp-meta-gate-showcase](https://github.com/sheshisheri-hi/mcp-meta-gate-showcase) — interceptor stamps SEP-2817-shaped `aiInvocation` + channel-policy attestation; MCP server gate enforces attestation + ROPE-lite origin; SEP-2643-shaped denials; audit ≠ auth. Deck: [mcp-meta-gate-showcase-deck](https://github.com/sheshisheri-hi/mcp-meta-gate-showcase-deck). Related backlog IDs stay queued as inspiration: `2026-09-11-c`, `2026-09-08-c`, `2026-09-07-c`, `2026-09-06-b`.
+- **Public sample (2026-09-12):** [mcp-call-attestation-lite](https://github.com/sheshisheri-hi/mcp-call-attestation-lite) — SEP-3140-lite tool-menu pin (wax seal), SEP-2787-lite call attestation (shipping label), thin SEP-3004-style hash chain (receipt book). Deck: [mcp-call-attestation-lite-deck](https://github.com/sheshisheri-hi/mcp-call-attestation-lite-deck). Related queued inspiration: `2026-09-09-c`, `2026-09-06-c`.
