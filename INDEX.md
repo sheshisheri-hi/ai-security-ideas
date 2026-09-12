@@ -34,9 +34,11 @@
 | 2026-09-11 | 2026-09-11-b | CapScope (capability-scoped coding harness) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-11 | 2026-09-11-c | SEP-2817 AI Invocation Audit Context | protocol | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-11 | 2026-09-11-d | OpenAPPA (deterministic agentic flow policy) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-12 | 2026-09-12-a | MCP meta-gate showcase (2817 + channel attestation + ROPE-lite + 2643) | sample | shipped | — |
 
 ## Ad-hoc research
 
 Not daily candidates. Full pages live under `research/`.
 
 - [MCP C# Entra JWT design-time auth checklist (official 2026-07-28)](research/2026-09-06-mcp-csharp-entra-auth-design.md) (2026-09-06)
+- **Public sample (2026-09-12):** [mcp-meta-gate-showcase](https://github.com/sheshisheri-hi/mcp-meta-gate-showcase) — interceptor stamps SEP-2817-shaped `aiInvocation` + channel-policy attestation; MCP server gate enforces attestation + ROPE-lite origin; SEP-2643-shaped denials; audit ≠ auth. Deck: [mcp-meta-gate-showcase-deck](https://github.com/sheshisheri-hi/mcp-meta-gate-showcase-deck). Related backlog IDs stay queued as inspiration: `2026-09-11-c`, `2026-09-08-c`, `2026-09-07-c`, `2026-09-06-b`.
