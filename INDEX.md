@@ -36,6 +36,10 @@
 | 2026-09-11 | 2026-09-11-d | OpenAPPA (deterministic agentic flow policy) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 | 2026-09-12 | 2026-09-12-a | MCP meta-gate showcase (2817 + channel attestation + ROPE-lite + 2643) | sample | shipped | — |
 | 2026-09-12 | 2026-09-12-b | MCP call-attestation lite (2787 + 3140 + thin 3004) | sample | shipped | — |
+| 2026-09-14 | 2026-09-14-a | Whisper Attacks + A-VIP (AP2 intent binding) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-14 | 2026-09-14-b | A2ABreak (A2A protocol FSM security analysis) | paper | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-14 | 2026-09-14-c | OpenTrustBench (OWASP Trust Cards for agents/MCP) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
+| 2026-09-14 | 2026-09-14-d | NVIDIA SkillSpector (agent-skill security scanner) | tool | queued | [ideas/2026-09.md](ideas/2026-09.md) |
 
 ## Ad-hoc research
 
